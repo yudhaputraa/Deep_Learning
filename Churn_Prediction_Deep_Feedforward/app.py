@@ -1,30 +1,44 @@
 from flask import Flask, request, jsonify, render_template
 from tensorflow.keras.models import load_model
 import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
-# Load the trained model
+# Memuat model yang telah dilatih dari file H5
 model = load_model('best_model.h5')
 
-# Define the home route
+# Inisialisasi standard scaler untuk data input
+sc = StandardScaler()
+# Asumsikan Anda memiliki akses ke data asli untuk menyesuaikan scaler
+original_data = pd.read_csv('Churn_Modelling.csv', index_col='RowNumber')
+original_data.drop(['CustomerId', 'Surname'], axis=1, inplace=True)
+Geography_dummies = pd.get_dummies(prefix='Geo', data=original_data, columns=['Geography'])
+Gender_dummies = Geography_dummies.replace(to_replace={'Gender': {'Female': 1, 'Male': 0}})
+churn_data_encoded = Gender_dummies
+X = churn_data_encoded.drop(['Exited'], axis=1)
+sc.fit(X)
+
+# Mendefinisikan rute home
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Define the predict route
+# Mendefinisikan rute prediksi
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the data from the POST request
+    # Mendapatkan data dari permintaan POST
     data = request.get_json(force=True)
     
-    # Convert data into numpy array
+    # Mengonversi data menjadi array numpy dan menstandarkan
     input_data = np.array([data['features']])
+    input_data_scaled = sc.transform(input_data)
     
-    # Make prediction
-    prediction = model.predict(input_data)
+    # Membuat prediksi
+    prediction = model.predict(input_data_scaled)
     
-    # Convert prediction to a list and return as JSON
+    # Mengonversi prediksi menjadi daftar dan mengembalikannya sebagai JSON
     output = prediction[0].tolist()
     return jsonify({'prediction': output})
 

@@ -3,22 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Prediction</title>
+    <title>Prediksi Model Churn</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Model Prediction</h1>
-    <form id="prediction-form">
-        <label for="features">Input Features (comma-separated):</label><br>
-        <input type="text" id="features" name="features"><br><br>
-        <input type="submit" value="Predict">
-    </form>
-    <h2>Prediction Result:</h2>
-    <p id="result"></p>
+    <div class="container">
+        <h1 class="mt-5">Prediksi Model Churn</h1>
+        <form id="prediction-form" class="mt-4">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="CreditScore">Credit Score:</label>
+                        <input type="text" class="form-control" id="CreditScore" name="CreditScore">
+                    </div>
+                    <div class="form-group">
+                        <label for="Gender">Gender:</label>
+                        <select class="form-control" id="Gender" name="Gender">
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Age">Age:</label>
+                        <input type="text" class="form-control" id="Age" name="Age">
+                    </div>
+                    <div class="form-group">
+                        <label for="Tenure">Tenure:</label>
+                        <input type="text" class="form-control" id="Tenure" name="Tenure">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="Balance">Balance:</label>
+                        <input type="text" class="form-control" id="Balance" name="Balance">
+                    </div>
+                    <div class="form-group">
+                        <label for="NumOfProducts">Number of Products:</label>
+                        <input type="text" class="form-control" id="NumOfProducts" name="NumOfProducts">
+                    </div>
+                    <div class="form-group">
+                        <label for="HasCrCard">Has Credit Card:</label>
+                        <select class="form-control" id="HasCrCard" name="HasCrCard">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsActiveMember">Is Active Member:</label>
+                        <select class="form-control" id="IsActiveMember" name="IsActiveMember">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="EstimatedSalary">Estimated Salary:</label>
+                        <input type="text" class="form-control" id="EstimatedSalary" name="EstimatedSalary">
+                    </div>
+                    <div class="form-group">
+                        <label for="Geo_France">Geography France:</label>
+                        <select class="form-control" id="Geo_France" name="Geo_France">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Geo_Germany">Geography Germany:</label>
+                        <select class="form-control" id="Geo_Germany" name="Geo_Germany">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Geo_Spain">Geography Spain:</label>
+                        <select class="form-control" id="Geo_Spain" name="Geo_Spain">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Prediksi</button>
+            <a href="/" class="btn btn-secondary">Prediksi Ulang</a>
+        </form>
+        <h2 class="mt-4">Hasil Prediksi:</h2>
+        <p id="result" class="lead"></p>
+    </div>
     
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.getElementById('prediction-form').onsubmit = async function(e) {
             e.preventDefault();
-            const features = document.getElementById('features').value.split(',').map(Number);
+            const features = [
+                Number(document.getElementById('CreditScore').value),
+                Number(document.getElementById('Gender').value),
+                Number(document.getElementById('Age').value),
+                Number(document.getElementById('Tenure').value),
+                Number(document.getElementById('Balance').value),
+                Number(document.getElementById('NumOfProducts').value),
+                Number(document.getElementById('HasCrCard').value),
+                Number(document.getElementById('IsActiveMember').value),
+                Number(document.getElementById('EstimatedSalary').value),
+                Number(document.getElementById('Geo_France').value),
+                Number(document.getElementById('Geo_Germany').value),
+                Number(document.getElementById('Geo_Spain').value)
+            ];
             const response = await fetch('/predict', {
                 method: 'POST',
                 headers: {
@@ -27,7 +119,7 @@
                 body: JSON.stringify({ features }),
             });
             const data = await response.json();
-            document.getElementById('result').textContent = `Prediction: ${data.prediction}`;
+            document.getElementById('result').textContent = `Prediksi: ${data.prediction}`;
         };
     </script>
 </body>
