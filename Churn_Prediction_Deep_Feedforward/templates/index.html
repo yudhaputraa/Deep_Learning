@@ -119,7 +119,14 @@
                 body: JSON.stringify({ features }),
             });
             const data = await response.json();
-            document.getElementById('result').textContent = `Prediksi: ${data.prediction}`;
+            const prediction = data.prediction;
+            let resultText = `Prediksi: ${prediction}`;
+            if (prediction >= 0.5) {
+                resultText += " (Pelanggan kemungkinan besar akan berhenti)";
+            } else {
+                resultText += " (Pelanggan kemungkinan besar tidak akan berhenti)";
+            }
+            document.getElementById('result').textContent = resultText;
         };
     </script>
 </body>
