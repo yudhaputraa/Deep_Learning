@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 app = Flask(__name__)
 
 # Memuat model yang telah dilatih dari file H5
-model = load_model('best_model.h5')
+model = load_model('best_model1.h5')
 
 # Inisialisasi standard scaler untuk data input
 sc = StandardScaler()
@@ -20,10 +20,13 @@ churn_data_encoded = Gender_dummies
 X = churn_data_encoded.drop(['Exited'], axis=1)
 sc.fit(X)
 
-# Mendefinisikan rute home
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
+
+@app.route('/prediksi')
+def home():
+    return render_template('prediksi.html')
 
 # Mendefinisikan rute prediksi
 @app.route('/predict', methods=['POST'])
